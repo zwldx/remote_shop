@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>网站信息</title>  
+    <link rel="stylesheet" href="__CSS__/pintuer.css">
+    <link rel="stylesheet" href="__CSS__/admin.css">
+    <script src="__JS__/jquery.js"></script>
+    <script src="__JS__/pintuer.js"></script>  
+    <link type="text/css" rel="stylesheet" href="__CSS__/style.css" />
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head"><strong class="icon-reorder"> 商品列表</strong></div>
+  <div class="padding border-bottom">  
+      <a class="button border-yellow" href="toadd"><span class="icon-plus-square-o"></span> 添加商品</a>
+      </div> 
+  
+
+               <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                  
+               
+              <tr>
+                <td class="car_th" width="5">ID</td>
+                <td class="car_th" width="5">缩略图</td>
+                <td class="car_th">商品名称</td>
+                <td class="car_th" >单价</td>
+                <td class="car_th">发布时间</td>
+                <td class="car_th" width="250">操作</td>
+                
+                 
+              </tr>
+         
+            {volist name='goodslist' id='v'}
+              <tr>
+                   <td align="center">{$v.goodsid}</td>
+                <td>
+                    <div class="c_s_img"><img src="/static/index/images/{$v.thumb}" width="73" height="73" /></div>
+                 
+                </td>
+                
+                <td align="center">{$v.goods_name}</td>
+                <td align="center">{$v.price}</td>
+                <td align="center" style="color:#ff4e00;">{$v.ctime}</td>
+                <td>
+      <div class="button-group">
+      <a type="button" class="button border-main" href="/admin/goods/tomodifygoods/goodsid/{$v.goodsid}"><span class="icon-edit"></span>修改</a>
+       <a class="button border-red" href="/admin/goods/deletegoodsbyId" onclick="del({$v.goodsid})"><span class="icon-trash-o"></span> 删除</a>
+      </div>
+      </td>
+              </tr>
+              {/volist}
+            </table>
+            <hr>
+           
+            <!--订单-->
+            
+
+  
+</div>
+<script>
+function del(id){
+	if(confirm("您确定要删除吗?")){
+		return true;
+	}else{
+		return false;
+	}
+}
+function del(id){
+	if(confirm("您确定要删除吗?")){
+	$.get("/admin/Goods/deleteGoodsById",{id:id},function(data){
+
+       if(data==1){
+          window.location.reload();
+           
+       }
+       
+});
+}}
+
+
+</script>
+
+</body></html>

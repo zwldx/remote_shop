@@ -1,0 +1,80 @@
+
+{layout name='order/layout_order'}
+
+		<div class="m_right">
+            <p></p>
+            <div class="mem_tit">我的订单</div>
+            
+            <!--订单-->
+           
+            {volist name='orderlist' id='v'}
+               <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                  
+                <td width="20%">订单号:<span id='orderid' >{$v[0]['orderid']}</span></td>
+                <td width="25%">下单时间<span>:{$v[0]['ctime']}</span></td>
+                <td width="15%">订单总金额<span>:{$v[0]['total_price']}</span></td>
+                <td width="25%">订单状态<span>:<?php
+                        if($v[0]['status']==0){
+                        echo '未处理';
+                        }
+                        if($v[0]['status']==1){
+                        echo '已处理';
+                        }
+                        if($v[0]['status']==2){
+                        echo '订单取消';
+                        }
+                        if($v[0]['status']==3){
+                        echo '订单完成';
+                        }
+                        
+                        
+                        ?></span></td>
+                <tr><td>收货人<span>:{$v[0]['consigner']}</span></td></tr>
+               <tr><td>收货地址<span>:{$v[0]['addr']}</span></ta></tr>
+               <tr><td>物流单号<span>:<a href="javascript:void(0)" onclick="getLogMsg('{$v[0]['log_num']}')">{$v[0]['log_num']}</a></span></ta></tr>
+              <tr>
+                <td class="car_th" width="550">商品名称</td>
+                <td class="car_th" width="140">单价</td>
+                <td class="car_th" width="150">购买数量</td>
+                <td class="car_th" width="130">小计</td>
+                <td class="car_th" width="140">返还积分</td>
+              </tr>
+              {volist name="$v[0]['goods']" id='val'}
+              <tr>
+                <td>
+                    <div class="c_s_img"><img src="__IMAGE__/{$val['thumb']}" width="73" height="73" /></div>
+                   {$val['goodsname']}
+                </td>
+                <td align="center">{$val['price']}</td>
+                <td align="center">{$val['goodsnum']}</td>
+                <td align="center" style="color:#ff4e00;">￥{$val['tal']}</td>
+                <td align="center">26R</td>
+              </tr>
+              {/volist}
+              <tr>
+                <td colspan="4" align="right" style="font-family:'Microsoft YaHei';">
+                    商品总价：￥{$v[0]['total_price']} ； 返还积分 56R  
+                </td>
+              </tr>
+              <tr>
+                  <td colspan="4" align="right" style="font-family:'Microsoft YaHei';">
+                      {if($v[0]['status']==0)}
+                      <input type="button" value='取消订单' onclick="delorder(this);">
+                      {elseif $v[0]['status']==1 /}
+                    <input type="button" value='确认收货' onclick="confirmgoods(this);">
+                    <input type="button" value='取消订单' onclick="delorder(this);">
+                      {/if}
+                  </td>
+                </tr>
+                
+              </table>
+            {/volist}
+            <!--订单-->
+            
+            
+        </div>
+     </div>
+     
+  
+
+	<!--End 用户中心 End--> 

@@ -1,0 +1,43 @@
+{
+	"folders": [
+		{
+			"path": "D:\\code\\shop"
+		},
+		{
+			"path": "D:\\code\\study"
+		},
+		{
+			"path": "D:\\code\\test"
+		}
+	],
+	"settings": {
+		"extensions.ignoreRecommendations": true,
+		"workbench.iconTheme": "vscode-icons", //增加文件夹图标
+		"php.validate.executablePath": "D:\\IT\\php\\phpServer\\server\\php\\php-nts-7.1.11\\php.exe", //这两个对于PHP非常重要
+		"php.executablePath": "D:\\IT\\php\\phpServer\\server\\php\\php-nts-7.1.11\\php.exe",
+		"extensions.autoUpdate": false,
+		"window.zoomLevel": 0,
+		"vim.disableAnnoyingNeovimMessage": true,
+		"editor.minimap.enabled": false, // #这个会关掉右边滑动预览栏（非常占位子）
+		"editor.wordWrap": "on" //每行如果超出视图范围就自动换行显示（仅仅是显示换行，方便阅读和编辑）
+		,
+		"sftp-sync": {
+			"local": {
+				"files": [
+					"**/*"
+				],
+				"root": "D:/code/remote/shop",
+			  "syncOnSave": true
+			},
+			"remotes": [
+				{
+					"host": "140.143.64.219",
+					"username": "root",
+					"port": 22,
+					"password": "zwl7848226",
+					"root": "/home/wwwroot/shop"
+				}
+			]
+		}
+	}
+}

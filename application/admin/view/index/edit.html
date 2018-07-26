@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__CSS__/pintuer.css">
+<link rel="stylesheet" href="__CSS__/admin.css">
+<script src="__JS__/jquery.js"></script>
+<script src="__JS__/pintuer.js"></script>
+<script charset="utf-8" src="__KINDEDITOR__/kindeditor.js"></script>
+<script charset="utf-8" src="__KINDEDITOR__/lang/zh-CN.js"></script>
+<script>
+        KindEditor.ready(function(K) {
+                // window.editor = K.create('#editor_id');
+            var editor1 = K.create('textarea[name="content1"]', {
+            cssPath : '__KINDEDITOR__/plugins/code/prettify.css',
+            uploadJson : '__KINDEDITOR__/php/upload_json.php',
+            fileManagerJson : '__KINDEDITOR__/php/file_manager_json.php',
+            allowFileManager : true,
+            afterCreate : function() {
+              var self = this;
+              K.ctrl(document, 13, function() {
+                self.sync();
+                K('form[name=addgoods]')[0].submit();
+              });
+              K.ctrl(self.edit.doc, 13, function() {
+                self.sync();
+                K('form[name=addgoods]')[0].submit();
+              });
+            }
+        });
+        prettyPrint();
+      });
+      // html = editor.html();
+      // editor.sync();
+      // html = K('#editor_id').val();
+</script>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span>修改商品</strong></div>
+  <div class="body-content">
+      <?php  //dump($goodsinfo); ?>
+    <form method="post" class="form-x" name="addgoods" enctype="multipart/form-data" action="/admin/goods/modifyGoods/goodsid/{$goodsinfo[0]['goodsid']}" >  
+      <div class="form-group">
+        <div class="label">
+          <label>商品名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$goodsinfo[0]['goods_name']}" name="goodsname" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+          <div class="label">
+            <label>商品价格：</label>
+          </div>
+          <div class="field">
+            <input type="text" class="input w50" value="{$goodsinfo[0]['price']}" name="price" data-validate="required:请输入价格" />
+            <div class="tips"></div>
+          </div>
+        </div>
+        <div class="form-group">
+            <div class="label">
+                <label>缩略图片:</label>
+            </div>
+            <div class="field">
+              <!-- <input type="" name="" id="file" />  -->
+              <input type="file" class="input w50" name="afile"/>
+              <div class="tips"></div>
+            </div>
+          </div>
+        
+        
+      <div class="form-group">
+        <div class="form-group">
+          <div class="label">
+            <label>所属分类：</label>
+          </div>
+          <div class="field">
+            <select name="cid" class="input w50">
+             
+             {volist name='category' id='v'}
+             
+              <option 
+                  {if $goodsinfo[0]['categoryid']==$v.categoryid}
+                  selected='selected'
+                  {/if}
+                  value="">{$v.category_name}</option>
+             {/volist}
+            </select>
+            <div class="tips"></div>
+          </div>
+        </div>
+
+
+      <div class="form-group">
+        <div class="label">
+          <label>商品描述：</label>
+        </div>
+        <div class="field">
+          <!-- <textarea name="content" class="input" style="height:450px; border:1px solid #ddd;"></textarea> -->
+          <textarea id="editor_id" name="content1" style="width:700px;height:300px;">
+              &lt;strong&gt;{$goodsinfo[0]['detail']}&lt;/strong&gt;
+              </textarea>
+          <div class="tips"></div>
+        </div>
+      </div>
+     
+      <div class="clear"></div>
+      
+
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+          <button class="button bg-main icon-check-square-o" type="submit"> 提交</button>
+        </div>
+          
+      </div>
+    </form>
+  </div>
+</div>
+
+</body></html>

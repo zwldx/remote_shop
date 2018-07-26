@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>网站信息</title>  
+<!--    <link rel="stylesheet" href="__CSS__/pintuer.css">
+    <link rel="stylesheet" href="__CSS__/admin.css">-->
+<link type="text/css" rel="stylesheet" href="__CSS__/style.css" />
+    <script src="__JS__/jquery.js"></script>
+    <script src="__JS__/pintuer.js"></script>  
+    <style>
+    
+    </style>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head"><strong class="icon-reorder"> 商品列表</strong></div>
+               
+                 <!--后台订单-->
+          
+            {volist name='orderlist' id='v'}
+               <table border="0" class="car_tab" style="width:1110px;" cellspacing="0" cellpadding="0">
+                  
+                <td width="20%">订单号:<span name='orderid' >{$v[0]['orderid']}</span></td>
+                <td width="25%">下单时间<span>:{$v[0]['ctime']}</span></td>
+                <td width="15%">订单总金额<span>:{$v[0]['total_price']}</span></td>
+                <td width="25%">订单状态<span>:<?php
+                        if($v[0]['status']==0){
+                        echo '未处理';
+                        }
+                        if($v[0]['status']==1){
+                        echo '已处理';
+                        }
+                        if($v[0]['status']==2){
+                        echo '订单取消';
+                        }
+                        if($v[0]['status']==3){
+                        echo '订单完成';
+                        }
+                        
+                        
+                        ?></span></td>
+                 <tr><td>物流单号:<span name='log_num'>{$v[0]['log_num']}</span></td></tr>
+                <tr><td>收货人<span>:{$v[0]['consigner']}</span></td></tr>
+               <tr><td>收货地址<span>:{$v[0]['addr']}</span></ta></tr>
+              <tr>
+                <td class="car_th" width="550">商品名称</td>
+                <td class="car_th" width="140">单价</td>
+                <td class="car_th" width="150">购买数量</td>
+                <td class="car_th" width="130">小计</td>
+                <td class="car_th" width="140">返还积分</td>
+              </tr>
+              {volist name="$v[0]['goods']" id='val'}
+              <tr>
+                <td>
+                    <div class="c_s_img"><img src="/static/index/images/{$val['thumb']}" width="73" height="73" /></div>
+                   {$val['goodsname']}
+                </td>
+                <td align="center">{$val['price']}</td>
+                <td align="center">{$val['goodsnum']}</td>
+                <td align="center" style="color:#ff4e00;">￥{$val['tal']}</td>
+                <td align="center">26R</td>
+              </tr>
+              {/volist}
+              <tr>
+                <td colspan="4" align="right" style="font-family:'Microsoft YaHei';">
+                    商品总价：￥{$v[0]['total_price']} ； 返还积分 56R  
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" align="right" style="font-family:'Microsoft YaHei';">
+                    {if($v[0]['status']==0)}
+                    <input type="button" value='接收订单' onclick="reorder(this);">
+                    <input type="button" value='取消订单' onclick="delorder(this);">
+                    {elseif $v[0]['status']==1 /}
+                    <input type="button" value='更改单号' onclick="update(this);">
+                    {/if}
+                </td>
+              </tr>
+              
+            </table>
+            <hr>
+            {/volist}
+            <!--订单-->
+            
+
+    
+    
+
+</div>
+<script>
+function delorder(obj){
+	if(confirm('是否确定取消订单')==true){
+          var orderid = $(obj).parent().parent().parent().find('td span[name=orderid]').text();
+          //alert(orderid);
+         $.get('/admin/order/cansel',{orderid:orderid},function(data){
+        //alert(data);
+        if(data==1){
+        window.location.reload();
+    }
+    });
+   }
+    
+}
+function reorder(obj){
+    var log_num = prompt('请输入快递单号','');
+    var orderid = $(obj).parent().parent().parent().find('td span[name=orderid]').text();
+     $.get('/admin/order/reorder',{orderid:orderid,log_num:log_num},function(data){
+        //alert(data);
+        if(data==1){
+            window.location.reload();
+    }
+        
+    });
+}
+function update(obj){
+     var log_num = $(obj).parent().parent().parent().find('td span[name=log_num]').text();
+    var log_num = prompt('请输入快递单号',log_num);
+    var orderid = $(obj).parent().parent().parent().find('td span[name=orderid]').text();
+     $.get('/admin/order/reorder',{orderid:orderid,log_num:log_num},function(data){
+        //alert(data);
+        if(data==1){
+            window.location.reload();
+    }
+        
+    });
+}
+</script>
+
+</body></html>

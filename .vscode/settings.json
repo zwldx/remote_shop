@@ -1,0 +1,21 @@
+{
+    "sftp-sync": {
+        "local": {
+            "files": [
+                "**/*"
+            ],
+            "root": "D:/code/remote/shop",
+          "syncOnSave": true
+        },
+        "remotes": [
+            {
+                "host": "140.143.64.219",
+                "username": "root",
+                "port": 22,
+                "password": "zwl7848226",
+                "root": "/home/wwwroot/shop",
+                "syncOnSave": true
+            }
+        ]
+    }
+}
