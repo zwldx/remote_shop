@@ -11,7 +11,7 @@ class Goods extends Controller
     public function index()
     { 
        return $data = Db::table('shop_goodsinfo')->order('goodsid')->select();
-    }   
+    }
 
     //显示商品详情
     public function showDetail(Request $request)
