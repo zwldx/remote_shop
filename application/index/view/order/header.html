@@ -33,8 +33,11 @@
                 },'json');
             });
         }
-      
+
+        
+        
     </script>   
+
     
 <title>尤洪</title>
 </head>
@@ -121,10 +124,40 @@
         <span class="fr">
                 <span class="fl">                    
                 {if empty($Think.session.username)}你好，请<a href="/index/Suser/login" style="color:#ff4e00;">登录</a> &nbsp; <a href="/index/Suser/register" style="color:#ff4e00;">免费注册</a>&nbsp;
-                {else /}{$Think.session.username}已登录&nbsp;<a href="/index/Suser/logout" style="color:#ff4e00;">退出登录</a>   
+                {else /}{$Think.session.username}已登录&nbsp;<a href="/index/Suser/logout" style="color:#ff4e00;">退出登录</a><span id='day'></span><span id='hour'></span><span id='min'></span>&nbsp;|<a href="javascript:void(0)" onclick='extendDate()' style="color:#ff4e00;">登录延期</a>   
                 {/if}
                |&nbsp;<a href="/index/order/orderdetail">我的订单</a>&nbsp;|</span>
-
+               <script> 
+                holiday = {$ex_date*1000};
+                // alert(holiday);
+                function getDateTime(holiday){
+                    //Date.parse()返回的时间戳毫秒位为000
+                    var now = Date.parse(new Date());
+                    var timediff = (holiday - now)/1000; 
+                    if(timediff<=0){
+                        clearInterval(timer);
+                    }
+                    // 除以60*60*24是多少天
+                    var day = Math.floor(timediff/(60*60*24));
+                    // 除以60*60是多少小时，再对24取余获得，剩余的(不足一天，即24小时)小时数
+                    var hour = Math.floor(timediff/60/60%24);
+                    // 除以60是总共多少分钟，再对60取余获得剩余的(不足一小时，即60分钟)分钟数
+                    var min = Math.floor(timediff/60%60);
+                    // 总秒数，对60取余，获得不足1分钟的秒数
+                    var sec = Math.floor(timediff%60);
+        
+                    //如果此脚本写在HTML中下列标签元素(即相关的span标签元素)的上面，将会报错，提示为null
+                    // alert(day+' '+hour+' '+min);
+                    document.getElementById('day').innerHTML = day+'天';
+                    document.getElementById('hour').innerHTML = hour+'小时';
+                    document.getElementById('min').innerHTML = min+'分钟';
+                    // document.getElementById('sec').innerHTML = sec+'秒';
+                }
+                // getDateTime(holiday);
+                // alert(holiday);
+                getDateTime(holiday);
+                timer = setInterval("getDateTime(holiday)",60000);
+            </script>
         	<span class="ss">
             	<div class="ss_list">
                 	<a href="#">收藏夹</a>

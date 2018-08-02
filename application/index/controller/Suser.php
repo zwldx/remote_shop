@@ -5,7 +5,8 @@ use think\Controller;
 use think\Db;
 use think\facade\Request;
 use app\index\model\User;
-use  think\facade\Session;
+use think\facade\Session;
+use think\facade\Cookie;
 
 class Suser extends Base
 {
@@ -14,6 +15,8 @@ class Suser extends Base
     {
         parent::__construct($app);
         $this->shopuser=new User();//实例化
+        $this->redis = new \Redis;
+        $this->redis->connect('127.0.0.1',6379);
     }
     public function index()
     {
@@ -72,18 +75,47 @@ class Suser extends Base
             //print_r($user);
             $paswd=Request::param('password');
             //print_r($paswd);die;
-            $result=$this->shopuser->get_password_by_username($user);
-            // $password=\json_decode(json_encode($password),true);
+            // $secret = '';
+            $is_keep_login = Request::param('is_keep_login');//是否保持登录状态
+            // dump($is_keep_login);die;
+            $userid = $this->redis->hget('user_id',$user);
+            $password = $this->redis->hget('user_pwd',$userid);
+            
+            if(!($userid&&$password)){
+                $result=$this->shopuser->get_password_by_username($user);
+                // $password=\json_decode(json_encode($password),true);
 
-            //用户id和密码
-            $userid = $result['userid'];
-            $password = $result['password'];
+                //用户id和密码
+                $userid = $result['userid'];
+                $password = $result['password'];
+            }
+            
 
             //print_r($password);
             if (!empty($password) && ($password==$paswd)) {
                 //session开始函数
                 session::set('username', $user);
                 session::set('userid', $userid);
+                //如果设置保持登录
+                if($is_keep_login=='on'){
+                    // $user_sign = Cookie::get('sign');
+                    // $user_expire_date = Cookie::get('expire_date');
+                    // if(empty($user_sign)||empty($user_expire_date)){
+                        //七天后过期
+                        $ex_date = time()+7*24*60*60;
+                        Cookie::forever('userid',$userid);
+                        $user_agent = $_SERVER['HTTP_USER_AGENT'];//获取浏览器信息
+                        $sign = get_sign($userid,$password,SECRET,$ex_date,$user_agent);
+                        Cookie::forever('sign',$sign);
+                        Cookie::forever('expire_date',$ex_date);
+                        $this->redis->hset('user_pwd',$userid,$password);
+                        $this->redis->hset('user_id',$user,$userid);
+                        $this->redis->hset('user_name',$userid,$user);
+                        $this->redis->sadd('keep_login_users',$userid);
+                        $this->redis->hset('newest_sign',$userid,$sign);
+                    // }
+                }
+                
                 //原生的session
                 //session_start();
                 //$_SESSION['username']=$user;
@@ -134,10 +166,28 @@ class Suser extends Base
     //用户退出
     public function logout()
     {
+        $userid = session('userid');
         //清除session
         Session::clear();
         //session::get('username');
+        // dump(session('userid'));die;
+        $this->redis->srem('keep_login_users',$userid);
         $this->success('退出成功', '/index/Index/index');
         return $this->fetch('login');
+    }
+
+    //登录限期功能
+    public function extendDate(){
+        //判断是否登录
+        $userId = $this->chkLogin();
+        $ex_date = time()+7*24*60*60;
+        $password = $this->redis->hget('user_pwd',$userId);
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];//获取浏览器信息
+        $sign = get_sign($userId,$password,SECRET,$ex_date,$user_agent);
+        Cookie::forever('userid',$userId);
+        Cookie::forever('sign',$sign);
+        Cookie::forever('expire_date',$ex_date);
+        $this->redis->hset('newest_sign',$userId,$sign);
+        return $ex_date;
     }
 }

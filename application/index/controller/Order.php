@@ -3,6 +3,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Db;
 use think\Request;
+use think\facade\Cookie;
 
 
 class Order extends Base
@@ -69,7 +70,8 @@ class Order extends Base
         //echo'<pre>';
         //print_r($orderlist);
         //dump($orderlist);
-        return $this->fetch('order/member_order',['orderlist'=>$orderlist]);        
+        $expire_date =Cookie::get('expire_date');
+        return $this->fetch('order/member_order',['orderlist'=>$orderlist,'ex_date'=>$expire_date]);        
     }
 
     public function checkOut()

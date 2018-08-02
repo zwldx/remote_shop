@@ -65,3 +65,13 @@ function trans(){
         }
     },'json');
 }
+
+function extendDate(){
+    jq.get('/index/Suser/extendDate',function(data){
+        if(data){
+            clearInterval(timer);
+            timer = setInterval("getDateTime("+(data*1000)+")",60000);
+            getDateTime(data*1000);
+        }
+    })
+}
